@@ -1,36 +1,14 @@
-import { useState } from "react";
-import "./App.css";
-import { useJobApplications } from "./providers/jobsQueries";
+import { Container, Typography, Box } from "@mui/material";
+import JobApplicationsTable from "./components/JobApplicationsTable";
 
-function App() {
-  const [error, setError] = useState<string | null>(null);
-
-  const { jobs } = useJobApplications();
-
+export default function App() {
   return (
-    <>
-      <h1>Vite + React</h1>
+    <Container sx={{ py: 3 }}>
+      <Box sx={{ display: "flex", alignItems: "baseline", mb: 2 }}>
+        <Typography variant="h4">ApplyVault</Typography>
+      </Box>
 
-      <div style={{ marginBottom: 16 }}>
-        <strong>Jobs:</strong>{" "}
-        {error
-          ? `Error: ${error}`
-          : jobs
-            ? `${jobs.length} loaded`
-            : "Loading..."}
-      </div>
-
-      {jobs && (
-        <pre style={{ textAlign: "left", overflow: "auto", maxHeight: 300 }}>
-          {JSON.stringify(jobs.slice(0, 2), null, 2)}
-        </pre>
-      )}
-
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <JobApplicationsTable />
+    </Container>
   );
 }
-
-export default App;

@@ -1,0 +1,63 @@
+import { useMemo } from "react";
+import { MaterialReactTable, type MRT_ColumnDef } from "material-react-table";
+import { Alert, Box, CircularProgress } from "@mui/material";
+import { useJobApplications } from "../providers/jobsQueries";
+import type { JobApplicationResponseDto } from "../types/jobApplication";
+
+export default function JobApplicationsTable() {
+  const { jobs, isLoadingJobs, errorJobs } = useJobApplications();
+
+  const columns = useMemo<MRT_ColumnDef<JobApplicationResponseDto>[]>(
+    () => [
+      { accessorKey: "company", header: "Company" },
+      { accessorKey: "role", header: "Role" },
+      { accessorKey: "status", header: "Status" },
+      { accessorKey: "location", header: "Location" },
+      {
+        accessorKey: "isRemote",
+        header: "Remote",
+        Cell: ({ cell }) => (cell.getValue<boolean>() ? "Yes" : "No"),
+        size: 60,
+      },
+      { accessorKey: "lastTouch", header: "Last Touch" },
+      { accessorKey: "nextAction", header: "Next Action" },
+    ],
+    [],
+  );
+
+  if (isLoadingJobs) {
+    return (
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2, py: 4 }}>
+        <CircularProgress size={22} />
+        <span>Loading…</span>
+      </Box>
+    );
+  }
+
+  if (errorJobs) {
+    return (
+      <Alert severity="error">
+        {(errorJobs as Error).message || "Failed to load job applications."}
+      </Alert>
+    );
+  }
+
+  return (
+    <MaterialReactTable
+      columns={columns}
+      data={jobs}
+      enableColumnFilters
+      enableSorting
+      enablePagination
+      enableDensityToggle={false}
+      enableFullScreenToggle={false}
+      enableHiding={false}
+      initialState={{
+        density: "compact",
+        pagination: { pageIndex: 0, pageSize: 20 },
+      }}
+      muiTableContainerProps={{ sx: { maxHeight: "70vh" } }}
+      enableStickyHeader
+    />
+  );
+}
