@@ -1,67 +1,75 @@
+import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createJobApplication,
   deleteJobApplication,
-  getJobApplicationById,
   getJobApplications,
   updateJobApplication,
 } from "./jobsApi";
 import { jobsQueryKeys } from "./jobsQueryKeys";
 import type {
+  JobApplicationResponseDto,
   CreateJobApplicationRequestDto,
   UpdateJobApplicationRequestDto,
 } from "../types/jobApplication";
 
-export function useJobApplications() {
-  return useQuery({
+export const useJobApplications = () => {
+  const {
+    isLoading: isLoadingJobs,
+    error: errorJobs,
+    data: jobsRaw,
+  } = useQuery({
     queryKey: jobsQueryKeys.all,
-    queryFn: ({ signal }) => getJobApplications(signal),
+    queryFn: () => getJobApplications(),
   });
-}
 
-export function useJobApplication(id: string | undefined) {
-  return useQuery({
-    queryKey: id ? jobsQueryKeys.byId(id) : jobsQueryKeys.byId(""),
-    queryFn: ({ signal }) => getJobApplicationById(id!, signal),
-    enabled: !!id,
-  });
-}
+  const jobs = useMemo<JobApplicationResponseDto[]>(() => {
+    return jobsRaw ?? [];
+  }, [jobsRaw]);
 
-export function useCreateJobApplication(onSuccess?: () => void) {
+  return { isLoadingJobs, errorJobs, jobs };
+};
+
+export const useCreateJobApplication = (
+  successCallback?: (created: JobApplicationResponseDto) => void,
+) => {
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: (dto: CreateJobApplicationRequestDto) =>
       createJobApplication(dto),
-    onSuccess: async () => {
+    onSuccess: async (created) => {
       await qc.invalidateQueries({ queryKey: jobsQueryKeys.all });
-      onSuccess?.();
+      successCallback?.(created);
     },
   });
-}
+};
 
-export function useUpdateJobApplication(id: string, onSuccess?: () => void) {
+export const useUpdateJobApplication = (
+  id: string,
+  successCallback?: (updated: JobApplicationResponseDto) => void,
+) => {
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: (dto: UpdateJobApplicationRequestDto) =>
       updateJobApplication(id, dto),
-    onSuccess: async () => {
+    onSuccess: async (updated) => {
       await qc.invalidateQueries({ queryKey: jobsQueryKeys.all });
       await qc.invalidateQueries({ queryKey: jobsQueryKeys.byId(id) });
-      onSuccess?.();
+      successCallback?.(updated);
     },
   });
-}
+};
 
-export function useDeleteJobApplication(onSuccess?: () => void) {
+export const useDeleteJobApplication = (successCallback?: () => void) => {
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: (id: string) => deleteJobApplication(id),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: jobsQueryKeys.all });
-      onSuccess?.();
+      successCallback?.();
     },
   });
-}
+};
