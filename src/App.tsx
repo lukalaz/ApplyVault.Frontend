@@ -73,17 +73,6 @@ export default function App() {
     setDeletingJob(job);
   };
 
-  const closeDialog = () => {
-    if (createMutation.isPending || updateMutation.isPending) return;
-    setIsDialogOpen(false);
-    setEditingJob(null);
-  };
-
-  const closeDeleteDialog = () => {
-    if (deleteMutation.isPending) return;
-    setDeletingJob(null);
-  };
-
   const handleSubmit = (dto: CreateJobApplicationRequestDto) => {
     if (editingJob) {
       updateMutation.mutate({ id: editingJob.id, dto });
@@ -183,7 +172,11 @@ export default function App() {
 
       <JobApplicationDialog
         open={isDialogOpen}
-        onClose={closeDialog}
+        onClose={() => {
+          if (createMutation.isPending || updateMutation.isPending) return;
+          setIsDialogOpen(false);
+          setEditingJob(null);
+        }}
         onSubmit={handleSubmit}
         isSubmitting={createMutation.isPending || updateMutation.isPending}
         mode={editingJob ? "edit" : "create"}
@@ -194,7 +187,10 @@ export default function App() {
         open={Boolean(deletingJob)}
         job={deletingJob}
         isDeleting={deleteMutation.isPending}
-        onCancel={closeDeleteDialog}
+        onCancel={() => {
+          if (deleteMutation.isPending) return;
+          setDeletingJob(null);
+        }}
         onConfirm={handleDeleteConfirm}
       />
     </Box>
