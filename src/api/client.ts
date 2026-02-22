@@ -1,6 +1,6 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
-async function request(path: string, init?: RequestInit) {
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
     ...init,
     headers: {
@@ -10,16 +10,16 @@ async function request(path: string, init?: RequestInit) {
   });
 
   if (!res.ok) throw new Error(`Request failed (${res.status})`);
-  if (res.status === 204) return null;
+  if (res.status === 204) return null as T;
 
-  return res.json();
+  return res.json() as Promise<T>;
 }
 
 export const api = {
-  get: (path: string) => request(path),
-  post: (path: string, body: unknown) =>
-    request(path, { method: "POST", body: JSON.stringify(body) }),
-  put: (path: string, body: unknown) =>
-    request(path, { method: "PUT", body: JSON.stringify(body) }),
-  delete: (path: string) => request(path, { method: "DELETE" }),
+  get: <T>(path: string) => request<T>(path),
+  post: <T>(path: string, body: unknown) =>
+    request<T>(path, { method: "POST", body: JSON.stringify(body) }),
+  put: <T>(path: string, body: unknown) =>
+    request<T>(path, { method: "PUT", body: JSON.stringify(body) }),
+  delete: <T = null>(path: string) => request<T>(path, { method: "DELETE" }),
 };

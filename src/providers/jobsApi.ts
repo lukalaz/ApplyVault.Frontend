@@ -6,12 +6,15 @@ import type {
 } from "../types/jobApplication";
 
 export const getJobApplications = () =>
-  api.get("/api/job-applications") as Promise<JobApplicationResponseDto[]>;
+  api.get<JobApplicationResponseDto[]>("/api/job-applications");
+
 export const createJobApplication = (dto: CreateJobApplicationRequestDto) =>
-  api.post("/api/job-applications", dto);
+  api.post<JobApplicationResponseDto>("/api/job-applications", dto);
+
 export const updateJobApplication = (
   id: string,
   dto: UpdateJobApplicationRequestDto,
-) => api.put(`/api/job-applications/${id}`, dto);
+) => api.put<JobApplicationResponseDto>(`/api/job-applications/${id}`, dto);
+
 export const deleteJobApplication = (id: string) =>
   api.delete(`/api/job-applications/${id}`);

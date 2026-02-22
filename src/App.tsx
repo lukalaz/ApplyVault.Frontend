@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import {
   AppBar,
   Box,
@@ -15,15 +15,26 @@ import {
   Container,
   Button,
   Paper,
+  Alert,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/Inbox";
 import MailIcon from "@mui/icons-material/Mail";
 import JobApplicationsTable from "./components/JobApplicationsTable";
+import JobApplicationDialog from "./components/JobApplicationDialog";
+import { useCreateJobApplication } from "./providers/jobsQueries";
+import type { CreateJobApplicationRequestDto } from "./types/jobApplication";
 
 const drawerWidth = 240;
 
 export default function App() {
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const createMutation = useCreateJobApplication(() => setIsCreateDialogOpen(false));
+
+  const handleCreate = (dto: CreateJobApplicationRequestDto) => {
+    createMutation.mutate(dto);
+  };
+
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <CssBaseline />
@@ -36,7 +47,9 @@ export default function App() {
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
             ApplyVault
           </Typography>
-          <Button color="inherit">New</Button>
+          <Button color="inherit" onClick={() => setIsCreateDialogOpen(true)}>
+            New
+          </Button>
         </Toolbar>
       </AppBar>
 
@@ -67,11 +80,23 @@ export default function App() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
         <Container maxWidth={false} sx={{ px: 0 }}>
+          {createMutation.error ? (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {(createMutation.error as Error).message || "Failed to create application."}
+            </Alert>
+          ) : null}
           <Paper elevation={1} sx={{ p: 2 }}>
-            <JobApplicationsTable />
+            <JobApplicationsTable onNewClick={() => setIsCreateDialogOpen(true)} />
           </Paper>
         </Container>
       </Box>
+
+      <JobApplicationDialog
+        open={isCreateDialogOpen}
+        onClose={() => setIsCreateDialogOpen(false)}
+        onSubmit={handleCreate}
+        isSubmitting={createMutation.isPending}
+      />
     </Box>
   );
 }

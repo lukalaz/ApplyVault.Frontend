@@ -1,23 +1,30 @@
 import { useMemo } from "react";
 import { MaterialReactTable, type MRT_ColumnDef } from "material-react-table";
-import {
-  Alert,
-  Box,
-  CircularProgress,
-  Button,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Button, CircularProgress, Typography } from "@mui/material";
 import { useJobApplications } from "../providers/jobsQueries";
-import type { JobApplicationResponseDto } from "../types/jobApplication";
+import type {
+  ApplicationStatus,
+  JobApplicationResponseDto,
+} from "../types/jobApplication";
+import { getApplicationStatusLabel } from "../types/jobApplication";
 
-export default function JobApplicationsTable() {
+type JobApplicationsTableProps = {
+  onNewClick?: () => void;
+};
+
+export default function JobApplicationsTable({ onNewClick }: JobApplicationsTableProps) {
   const { jobs, isLoadingJobs, errorJobs } = useJobApplications();
 
   const columns = useMemo<MRT_ColumnDef<JobApplicationResponseDto>[]>(
     () => [
       { accessorKey: "company", header: "Company" },
       { accessorKey: "role", header: "Role" },
-      { accessorKey: "status", header: "Status" },
+      {
+        accessorKey: "status",
+        header: "Status",
+        Cell: ({ cell }) =>
+          getApplicationStatusLabel(cell.getValue<ApplicationStatus>()),
+      },
       { accessorKey: "location", header: "Location" },
       {
         accessorKey: "isRemote",
@@ -35,7 +42,7 @@ export default function JobApplicationsTable() {
     return (
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, py: 4 }}>
         <CircularProgress size={22} />
-        <span>Loading…</span>
+        <span>Loading...</span>
       </Box>
     );
   }
@@ -55,7 +62,7 @@ export default function JobApplicationsTable() {
       renderTopToolbarCustomActions={() => (
         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
           <Typography variant="subtitle1">Applications</Typography>
-          <Button variant="contained" size="small">
+          <Button variant="contained" size="small" onClick={onNewClick}>
             New
           </Button>
         </Box>
