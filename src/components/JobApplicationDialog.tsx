@@ -36,6 +36,14 @@ type JobApplicationFormState = {
   dateApplied: string;
   isRemote: boolean;
   location: string;
+  referral: string;
+  contactPerson: string;
+  compensationRange: string;
+  lastTouch: string;
+  nextAction: string;
+  nextActionDate: string;
+  notes: string;
+  link: string;
 };
 
 const initialFormState: JobApplicationFormState = {
@@ -45,6 +53,14 @@ const initialFormState: JobApplicationFormState = {
   dateApplied: "",
   isRemote: false,
   location: "",
+  referral: "",
+  contactPerson: "",
+  compensationRange: "",
+  lastTouch: "",
+  nextAction: "",
+  nextActionDate: "",
+  notes: "",
+  link: "",
 };
 
 const toDateInputValue = (value: string | null | undefined) => {
@@ -73,6 +89,14 @@ export default function JobApplicationDialog({
         dateApplied: toDateInputValue(initialValues.dateApplied),
         isRemote: initialValues.isRemote,
         location: initialValues.location ?? "",
+        referral: initialValues.referral ?? "",
+        contactPerson: initialValues.contactPerson ?? "",
+        compensationRange: initialValues.compensationRange ?? "",
+        lastTouch: toDateInputValue(initialValues.lastTouch),
+        nextAction: initialValues.nextAction ?? "",
+        nextActionDate: toDateInputValue(initialValues.nextActionDate),
+        notes: initialValues.notes ?? "",
+        link: initialValues.link ?? "",
       });
       return;
     }
@@ -96,6 +120,14 @@ export default function JobApplicationDialog({
       isRemote: form.isRemote,
       location: form.location.trim() || null,
       dateApplied: form.dateApplied || null,
+      referral: form.referral.trim() || null,
+      contactPerson: form.contactPerson.trim() || null,
+      compensationRange: form.compensationRange.trim() || null,
+      lastTouch: form.lastTouch || null,
+      nextAction: form.nextAction.trim() || null,
+      nextActionDate: form.nextActionDate || null,
+      notes: form.notes.trim() || null,
+      link: form.link.trim() || null,
     });
   };
 
@@ -179,6 +211,68 @@ export default function JobApplicationDialog({
                 />
               }
               label="Remote"
+            />
+            <TextField
+              label="Referral"
+              value={form.referral}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, referral: event.target.value }))
+              }
+            />
+            <TextField
+              label="Contact Person"
+              value={form.contactPerson}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, contactPerson: event.target.value }))
+              }
+            />
+            <TextField
+              label="Compensation Range"
+              value={form.compensationRange}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, compensationRange: event.target.value }))
+              }
+            />
+            <TextField
+              label="Last Touch"
+              type="date"
+              value={form.lastTouch}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, lastTouch: event.target.value }))
+              }
+              slotProps={{ inputLabel: { shrink: true } }}
+            />
+            <TextField
+              label="Next Action"
+              value={form.nextAction}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, nextAction: event.target.value }))
+              }
+            />
+            <TextField
+              label="Next Action Date"
+              type="date"
+              value={form.nextActionDate}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, nextActionDate: event.target.value }))
+              }
+              slotProps={{ inputLabel: { shrink: true } }}
+            />
+            <TextField
+              label="Link"
+              value={form.link}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, link: event.target.value }))
+              }
+            />
+            <TextField
+              label="Notes"
+              value={form.notes}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, notes: event.target.value }))
+              }
+              multiline
+              minRows={3}
             />
           </Stack>
         </DialogContent>
