@@ -14,6 +14,10 @@ export const appTheme = createTheme({
       paper: "#151a21",
     },
   },
+  typography: {
+    fontFamily:
+      '"Poppins", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  },
   shape: {
     borderRadius: 10,
   },
