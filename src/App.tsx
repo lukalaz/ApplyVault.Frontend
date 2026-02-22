@@ -1,6 +1,7 @@
 import {
   AppBar,
   Box,
+  Container,
   CssBaseline,
   Divider,
   Drawer,
@@ -9,36 +10,36 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Menu,
+  MenuItem,
   Toolbar,
   Typography,
-  Container,
-  FormControl,
-  Select,
-  MenuItem,
-  type SelectChangeEvent,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/Inbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { DE, US } from "country-flag-icons/react/3x2";
 import ApplicationTableFeature from "./features/ApplicationTable";
-
-// ✅ Flags as SVG components (consistent everywhere)
-import { US, DE } from "country-flag-icons/react/3x2";
 
 const drawerWidth = 240;
 const languageStorageKey = "applyvault.language";
 
 type LanguageCode = "en" | "de";
 
-const Flag = ({ children }: { children: React.ReactNode }) => (
+const Flag = ({
+  language,
+  title,
+}: {
+  language: LanguageCode;
+  title: string;
+}) => (
   <Box
     component="span"
     sx={{
       display: "inline-flex",
       alignItems: "center",
-      mr: 1,
       "& svg": {
         width: 18,
         height: 12,
@@ -47,25 +48,29 @@ const Flag = ({ children }: { children: React.ReactNode }) => (
       },
     }}
   >
-    {children}
+    {language === "de" ? <DE title={title} /> : <US title={title} />}
   </Box>
 );
 
 export default function App() {
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [languageMenuAnchor, setLanguageMenuAnchor] = useState<null | HTMLElement>(
+    null,
+  );
   const { t, i18n } = useTranslation();
 
   const currentLanguage: LanguageCode = i18n.resolvedLanguage?.startsWith("de")
     ? "de"
     : "en";
 
-  const handleLanguageChange = (event: SelectChangeEvent<LanguageCode>) => {
-    const nextLanguage = event.target.value as LanguageCode;
+  const handleLanguageChange = (nextLanguage: LanguageCode) => {
     void i18n.changeLanguage(nextLanguage);
 
     if (typeof window !== "undefined") {
       window.localStorage.setItem(languageStorageKey, nextLanguage);
     }
+
+    setLanguageMenuAnchor(null);
   };
 
   return (
@@ -86,46 +91,49 @@ export default function App() {
           >
             <MenuIcon />
           </IconButton>
-
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
             {t("app.title")}
           </Typography>
-
-          <FormControl size="small" sx={{ minWidth: 132 }}>
-            <Select
-              value={currentLanguage}
-              onChange={handleLanguageChange}
-              aria-label={t("app.language.label")}
-              renderValue={(value) => (
-                <Box sx={{ display: "inline-flex", alignItems: "center" }}>
-                  <Flag>
-                    {value === "de" ? (
-                      <DE title="Deutsch" />
-                    ) : (
-                      <US title="English" />
-                    )}
-                  </Flag>
-                  {value === "de"
-                    ? t("app.language.german")
-                    : t("app.language.english")}
-                </Box>
-              )}
+          <IconButton
+            color="inherit"
+            aria-label={t("app.language.label")}
+            onClick={(event) => setLanguageMenuAnchor(event.currentTarget)}
+          >
+            <Flag
+              language={currentLanguage}
+              title={
+                currentLanguage === "de"
+                  ? t("app.language.german")
+                  : t("app.language.english")
+              }
+            />
+          </IconButton>
+          <Menu
+            anchorEl={languageMenuAnchor}
+            open={Boolean(languageMenuAnchor)}
+            onClose={() => setLanguageMenuAnchor(null)}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <MenuItem
+              selected={currentLanguage === "en"}
+              onClick={() => handleLanguageChange("en")}
             >
-              <MenuItem value="en">
-                <Flag>
-                  <US title="English" />
-                </Flag>
-                {t("app.language.english")}
-              </MenuItem>
-
-              <MenuItem value="de">
-                <Flag>
-                  <DE title="Deutsch" />
-                </Flag>
-                {t("app.language.german")}
-              </MenuItem>
-            </Select>
-          </FormControl>
+              <Box sx={{ display: "inline-flex", alignItems: "center", mr: 1 }}>
+                <Flag language="en" title={t("app.language.english")} />
+              </Box>
+              {t("app.language.english")}
+            </MenuItem>
+            <MenuItem
+              selected={currentLanguage === "de"}
+              onClick={() => handleLanguageChange("de")}
+            >
+              <Box sx={{ display: "inline-flex", alignItems: "center", mr: 1 }}>
+                <Flag language="de" title={t("app.language.german")} />
+              </Box>
+              {t("app.language.german")}
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
 
