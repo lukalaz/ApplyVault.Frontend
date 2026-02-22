@@ -6,6 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import type { JobApplicationResponseDto } from "../../../types/jobApplication";
 
 type ConfirmDeleteDialogProps = {
@@ -23,7 +24,8 @@ export default function ConfirmDeleteDialog({
   onCancel,
   onConfirm,
 }: ConfirmDeleteDialogProps) {
-  const label = job ? `${job.company} - ${job.role}` : "this application";
+  const { t } = useTranslation();
+  const label = job ? `${job.company} - ${job.role}` : t("common.empty");
 
   return (
     <Dialog
@@ -34,15 +36,15 @@ export default function ConfirmDeleteDialog({
       fullWidth
       maxWidth="xs"
     >
-      <DialogTitle id="confirm-delete-title">Delete Application</DialogTitle>
+      <DialogTitle id="confirm-delete-title">{t("dialogs.confirmDelete.title")}</DialogTitle>
       <DialogContent>
         <DialogContentText id="confirm-delete-description">
-          Are you sure you want to delete {label}? This action cannot be undone.
+          {t("dialogs.confirmDelete.description", { label })}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel} disabled={isDeleting}>
-          Cancel
+          {t("common.cancel")}
         </Button>
         <Button
           color="error"
@@ -50,7 +52,7 @@ export default function ConfirmDeleteDialog({
           onClick={onConfirm}
           disabled={isDeleting || !job}
         >
-          {isDeleting ? "Deleting..." : "Delete"}
+          {isDeleting ? t("common.deleting") : t("common.delete")}
         </Button>
       </DialogActions>
     </Dialog>

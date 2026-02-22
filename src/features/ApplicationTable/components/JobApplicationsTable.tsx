@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { MaterialReactTable, type MRT_ColumnDef } from "material-react-table";
 import {
   Alert,
@@ -12,12 +12,12 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useTranslation } from "react-i18next";
 import { useJobApplications } from "../providers/jobsQueries";
-import type {
+import {
   ApplicationStatus,
-  JobApplicationResponseDto,
+  type JobApplicationResponseDto,
 } from "../../../types/jobApplication";
-import { getApplicationStatusLabel } from "../../../types/jobApplication";
 
 type JobApplicationsTableProps = {
   onNewClick?: () => void;
@@ -25,15 +25,23 @@ type JobApplicationsTableProps = {
   onDeleteClick?: (job: JobApplicationResponseDto) => void;
 };
 
-const formatDateValue = (value: string | null) => {
-  if (!value) return "-";
-  return value.slice(0, 10);
-};
-
-const formatTextValue = (value: string | null | undefined) => {
-  if (!value) return "-";
-  const trimmed = value.trim();
-  return trimmed.length > 0 ? trimmed : "-";
+const getStatusTranslationKey = (status: ApplicationStatus) => {
+  switch (status) {
+    case ApplicationStatus.Planned:
+      return "status.planned";
+    case ApplicationStatus.Applied:
+      return "status.applied";
+    case ApplicationStatus.Interviewing:
+      return "status.interviewing";
+    case ApplicationStatus.Offer:
+      return "status.offer";
+    case ApplicationStatus.Rejected:
+      return "status.rejected";
+    case ApplicationStatus.Accepted:
+      return "status.accepted";
+    default:
+      return "status.unknown";
+  }
 };
 
 export default function JobApplicationsTable({
@@ -42,88 +50,107 @@ export default function JobApplicationsTable({
   onDeleteClick,
 }: JobApplicationsTableProps) {
   const { jobs, isLoadingJobs, errorJobs } = useJobApplications();
+  const { t } = useTranslation();
+
+  const formatDateValue = useCallback(
+    (value: string | null) => {
+      if (!value) return t("common.empty");
+      return value.slice(0, 10);
+    },
+    [t],
+  );
+
+  const formatTextValue = useCallback(
+    (value: string | null | undefined) => {
+      if (!value) return t("common.empty");
+      const trimmed = value.trim();
+      return trimmed.length > 0 ? trimmed : t("common.empty");
+    },
+    [t],
+  );
 
   const columns = useMemo<MRT_ColumnDef<JobApplicationResponseDto>[]>(
     () => [
-      { accessorKey: "company", header: "Company" },
-      { accessorKey: "role", header: "Role" },
-      { accessorKey: "location", header: "Location" },
+      { accessorKey: "company", header: t("table.headers.company") },
+      { accessorKey: "role", header: t("table.headers.role") },
+      { accessorKey: "location", header: t("table.headers.location") },
       {
         accessorKey: "isRemote",
-        header: "Remote",
-        Cell: ({ cell }) => (cell.getValue<boolean>() ? "Yes" : "No"),
+        header: t("table.headers.remote"),
+        Cell: ({ cell }) =>
+          cell.getValue<boolean>() ? t("common.yes") : t("common.no"),
         size: 60,
       },
       {
         accessorKey: "referral",
-        header: "Referral",
+        header: t("table.headers.referral"),
         Cell: ({ cell }) => formatTextValue(cell.getValue<string>()),
       },
       {
         accessorKey: "contactPerson",
-        header: "Contact Person",
+        header: t("table.headers.contactPerson"),
         Cell: ({ cell }) => formatTextValue(cell.getValue<string>()),
       },
       {
         accessorKey: "dateApplied",
-        header: "Date Applied",
+        header: t("table.headers.dateApplied"),
         Cell: ({ cell }) => formatDateValue(cell.getValue<string | null>()),
       },
       {
         accessorKey: "status",
-        header: "Status",
+        header: t("table.headers.status"),
         Cell: ({ cell }) =>
-          getApplicationStatusLabel(cell.getValue<ApplicationStatus>()),
+          t(getStatusTranslationKey(cell.getValue<ApplicationStatus>())),
       },
       {
         accessorKey: "compensationRange",
-        header: "Compensation",
+        header: t("table.headers.compensation"),
         Cell: ({ cell }) => formatTextValue(cell.getValue<string>()),
       },
       {
         accessorKey: "lastTouch",
-        header: "Last Touch",
+        header: t("table.headers.lastTouch"),
         Cell: ({ cell }) => formatDateValue(cell.getValue<string | null>()),
       },
       {
         accessorKey: "nextAction",
-        header: "Next Action",
+        header: t("table.headers.nextAction"),
         Cell: ({ cell }) => formatTextValue(cell.getValue<string>()),
       },
       {
         accessorKey: "nextActionDate",
-        header: "Next Action Date",
+        header: t("table.headers.nextActionDate"),
         Cell: ({ cell }) => formatDateValue(cell.getValue<string | null>()),
       },
       {
         accessorKey: "notes",
-        header: "Notes",
+        header: t("table.headers.notes"),
         Cell: ({ cell }) => formatTextValue(cell.getValue<string>()),
       },
       {
         accessorKey: "link",
-        header: "Link",
+        header: t("table.headers.link"),
         Cell: ({ cell }) => {
           const value = cell.getValue<string>();
           const text = formatTextValue(value);
-          if (text === "-") return text;
+          if (text === t("common.empty")) return text;
 
           return (
             <Link href={value} target="_blank" rel="noreferrer">
-              Open
+              {t("common.open")}
             </Link>
           );
         },
       },
     ],
-    [],
+    [formatDateValue, formatTextValue, t],
   );
 
   if (isLoadingJobs) {
     return (
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, py: 4 }}>
         <CircularProgress size={22} />
-        <span>Loading...</span>
+        <span>{t("common.loading")}</span>
       </Box>
     );
   }
@@ -131,7 +158,7 @@ export default function JobApplicationsTable({
   if (errorJobs) {
     return (
       <Alert severity="error">
-        {(errorJobs as Error).message || "Failed to load job applications."}
+        {(errorJobs as Error).message || t("errors.loadApplications")}
       </Alert>
     );
   }
@@ -143,7 +170,7 @@ export default function JobApplicationsTable({
       renderTopToolbarCustomActions={() => (
         <>
           <Box>
-            <Typography variant="subtitle1">Applications</Typography>
+            <Typography variant="subtitle1">{t("table.title")}</Typography>
           </Box>
           <Button
             variant="contained"
@@ -151,27 +178,27 @@ export default function JobApplicationsTable({
             onClick={onNewClick}
             sx={{ ml: "auto", paddingX: 0 }}
           >
-            New
+            {t("table.new")}
           </Button>
         </>
       )}
       enableRowActions
       renderRowActions={({ row }) => (
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <Tooltip title="Edit">
+          <Tooltip title={t("table.actions.edit")}>
             <IconButton
               size="small"
-              aria-label="Edit application"
+              aria-label={t("table.actions.editAria")}
               onClick={() => onEditClick?.(row.original)}
             >
               <EditIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Delete">
+          <Tooltip title={t("table.actions.delete")}>
             <IconButton
               size="small"
               color="error"
-              aria-label="Delete application"
+              aria-label={t("table.actions.deleteAria")}
               onClick={() => onDeleteClick?.(row.original)}
             >
               <DeleteIcon fontSize="small" />

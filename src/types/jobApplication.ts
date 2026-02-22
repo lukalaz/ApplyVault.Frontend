@@ -1,11 +1,14 @@
-export enum ApplicationStatus {
-  Planned = 0,
-  Applied = 1,
-  Interviewing = 2,
-  Offer = 3,
-  Rejected = 4,
-  Accepted = 5,
-}
+export const ApplicationStatus = {
+  Planned: 0,
+  Applied: 1,
+  Interviewing: 2,
+  Offer: 3,
+  Rejected: 4,
+  Accepted: 5,
+} as const;
+
+export type ApplicationStatus =
+  (typeof ApplicationStatus)[keyof typeof ApplicationStatus];
 
 export const APPLICATION_STATUS_OPTIONS = [
   { value: ApplicationStatus.Planned, label: "Planned" },
@@ -16,8 +19,24 @@ export const APPLICATION_STATUS_OPTIONS = [
   { value: ApplicationStatus.Accepted, label: "Accepted" },
 ] as const;
 
-export const getApplicationStatusLabel = (status: ApplicationStatus) =>
-  ApplicationStatus[status] ?? "Unknown";
+export const getApplicationStatusLabel = (status: ApplicationStatus) => {
+  switch (status) {
+    case ApplicationStatus.Planned:
+      return "Planned";
+    case ApplicationStatus.Applied:
+      return "Applied";
+    case ApplicationStatus.Interviewing:
+      return "Interviewing";
+    case ApplicationStatus.Offer:
+      return "Offer";
+    case ApplicationStatus.Rejected:
+      return "Rejected";
+    case ApplicationStatus.Accepted:
+      return "Accepted";
+    default:
+      return "Unknown";
+  }
+};
 
 export type JobApplicationResponseDto = {
   id: string;

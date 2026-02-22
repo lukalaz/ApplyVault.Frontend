@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Alert, Paper } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import {
   useCreateJobApplication,
   useDeleteJobApplication,
@@ -21,6 +22,7 @@ export default function ApplicationTableFeature() {
   const [deletingJob, setDeletingJob] = useState<JobApplicationResponseDto | null>(
     null,
   );
+  const { t } = useTranslation();
 
   const createMutation = useCreateJobApplication(() => {
     setIsDialogOpen(false);
@@ -58,12 +60,12 @@ export default function ApplicationTableFeature() {
     <>
       {saveError ? (
         <Alert severity="error" sx={{ mb: 2 }}>
-          {(saveError as Error).message || "Failed to save application."}
+          {(saveError as Error).message || t("errors.saveApplication")}
         </Alert>
       ) : null}
       {deleteError ? (
         <Alert severity="error" sx={{ mb: 2 }}>
-          {(deleteError as Error).message || "Failed to delete application."}
+          {(deleteError as Error).message || t("errors.deleteApplication")}
         </Alert>
       ) : null}
 

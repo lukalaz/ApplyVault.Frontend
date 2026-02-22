@@ -17,12 +17,14 @@ import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/Inbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import ApplicationTableFeature from "./features/ApplicationTable";
 
 const drawerWidth = 240;
 
 export default function App() {
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -43,7 +45,7 @@ export default function App() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-            ApplyVault
+            {t("app.title")}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -65,9 +67,9 @@ export default function App() {
         <Divider />
         <List>
           {[
-            { text: "All Applications", icon: <InboxIcon /> },
-            { text: "Saved Searches", icon: <MailIcon /> },
-            { text: "Settings", icon: <InboxIcon /> },
+            { text: t("app.nav.allApplications"), icon: <InboxIcon /> },
+            { text: t("app.nav.savedSearches"), icon: <MailIcon /> },
+            { text: t("app.nav.settings"), icon: <InboxIcon /> },
           ].map((item) => (
             <ListItemButton key={item.text}>
               <ListItemIcon>{item.icon}</ListItemIcon>
