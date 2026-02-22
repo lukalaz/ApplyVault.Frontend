@@ -6,6 +6,7 @@ import {
   Button,
   CircularProgress,
   IconButton,
+  Link,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -24,6 +25,17 @@ type JobApplicationsTableProps = {
   onDeleteClick?: (job: JobApplicationResponseDto) => void;
 };
 
+const formatDateValue = (value: string | null) => {
+  if (!value) return "-";
+  return value.slice(0, 10);
+};
+
+const formatTextValue = (value: string | null | undefined) => {
+  if (!value) return "-";
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : "-";
+};
+
 export default function JobApplicationsTable({
   onNewClick,
   onEditClick,
@@ -35,12 +47,6 @@ export default function JobApplicationsTable({
     () => [
       { accessorKey: "company", header: "Company" },
       { accessorKey: "role", header: "Role" },
-      {
-        accessorKey: "status",
-        header: "Status",
-        Cell: ({ cell }) =>
-          getApplicationStatusLabel(cell.getValue<ApplicationStatus>()),
-      },
       { accessorKey: "location", header: "Location" },
       {
         accessorKey: "isRemote",
@@ -48,8 +54,67 @@ export default function JobApplicationsTable({
         Cell: ({ cell }) => (cell.getValue<boolean>() ? "Yes" : "No"),
         size: 60,
       },
-      { accessorKey: "lastTouch", header: "Last Touch" },
-      { accessorKey: "nextAction", header: "Next Action" },
+      {
+        accessorKey: "referral",
+        header: "Referral",
+        Cell: ({ cell }) => formatTextValue(cell.getValue<string>()),
+      },
+      {
+        accessorKey: "contactPerson",
+        header: "Contact Person",
+        Cell: ({ cell }) => formatTextValue(cell.getValue<string>()),
+      },
+      {
+        accessorKey: "dateApplied",
+        header: "Date Applied",
+        Cell: ({ cell }) => formatDateValue(cell.getValue<string | null>()),
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+        Cell: ({ cell }) =>
+          getApplicationStatusLabel(cell.getValue<ApplicationStatus>()),
+      },
+      {
+        accessorKey: "compensationRange",
+        header: "Compensation",
+        Cell: ({ cell }) => formatTextValue(cell.getValue<string>()),
+      },
+      {
+        accessorKey: "lastTouch",
+        header: "Last Touch",
+        Cell: ({ cell }) => formatDateValue(cell.getValue<string | null>()),
+      },
+      {
+        accessorKey: "nextAction",
+        header: "Next Action",
+        Cell: ({ cell }) => formatTextValue(cell.getValue<string>()),
+      },
+      {
+        accessorKey: "nextActionDate",
+        header: "Next Action Date",
+        Cell: ({ cell }) => formatDateValue(cell.getValue<string | null>()),
+      },
+      {
+        accessorKey: "notes",
+        header: "Notes",
+        Cell: ({ cell }) => formatTextValue(cell.getValue<string>()),
+      },
+      {
+        accessorKey: "link",
+        header: "Link",
+        Cell: ({ cell }) => {
+          const value = cell.getValue<string>();
+          const text = formatTextValue(value);
+          if (text === "-") return text;
+
+          return (
+            <Link href={value} target="_blank" rel="noreferrer">
+              Open
+            </Link>
+          );
+        },
+      },
     ],
     [],
   );
@@ -116,7 +181,15 @@ export default function JobApplicationsTable({
         density: "compact",
         pagination: { pageIndex: 0, pageSize: 20 },
       }}
-      muiTableContainerProps={{ sx: { maxHeight: "70vh" } }}
+      muiTablePaperProps={{ sx: { width: "100%" } }}
+      muiTableContainerProps={{
+        sx: {
+          maxHeight: "70vh",
+          width: "100%",
+          overflowX: "auto",
+          overflowY: "auto",
+        },
+      }}
       enableStickyHeader
     />
   );

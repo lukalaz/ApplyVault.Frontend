@@ -98,7 +98,8 @@ export default function App() {
     deleteMutation.mutate(deletingJob.id);
   };
 
-  const saveError = (editingJob ? updateMutation.error : createMutation.error) ?? null;
+  const saveError =
+    (editingJob ? updateMutation.error : createMutation.error) ?? null;
   const deleteError = deleteMutation.error ?? null;
 
   return (
@@ -157,7 +158,7 @@ export default function App() {
         </List>
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, minWidth: 0, p: 3 }}>
         <Toolbar />
         <Container maxWidth={false} sx={{ px: 0 }}>
           {saveError ? (
@@ -170,7 +171,7 @@ export default function App() {
               {(deleteError as Error).message || "Failed to delete application."}
             </Alert>
           ) : null}
-          <Paper elevation={1} sx={{ p: 2 }}>
+          <Paper elevation={1} sx={{ p: 2, width: "100%", overflow: "hidden" }}>
             <JobApplicationsTable
               onNewClick={openCreateDialog}
               onEditClick={openEditDialog}
