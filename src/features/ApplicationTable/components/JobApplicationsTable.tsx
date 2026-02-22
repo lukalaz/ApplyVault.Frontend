@@ -141,12 +141,19 @@ export default function JobApplicationsTable({
       columns={columns}
       data={jobs}
       renderTopToolbarCustomActions={() => (
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-          <Typography variant="subtitle1">Applications</Typography>
-          <Button variant="contained" size="small" onClick={onNewClick}>
+        <>
+          <Box>
+            <Typography variant="subtitle1">Applications</Typography>
+          </Box>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={onNewClick}
+            sx={{ ml: "auto", paddingX: 0 }}
+          >
             New
           </Button>
-        </Box>
+        </>
       )}
       enableRowActions
       renderRowActions={({ row }) => (
