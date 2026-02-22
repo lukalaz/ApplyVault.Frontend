@@ -11,7 +11,10 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import type { CreateJobApplicationRequestDto } from "../types/jobApplication";
+import type {
+  CreateJobApplicationRequestDto,
+  JobApplicationResponseDto,
+} from "../types/jobApplication";
 import {
   ApplicationStatus,
   APPLICATION_STATUS_OPTIONS,
@@ -20,6 +23,8 @@ import {
 type JobApplicationDialogProps = {
   open: boolean;
   isSubmitting?: boolean;
+  mode?: "create" | "edit";
+  initialValues?: JobApplicationResponseDto | null;
   onClose: () => void;
   onSubmit: (dto: CreateJobApplicationRequestDto) => void;
 };
@@ -42,19 +47,38 @@ const initialFormState: JobApplicationFormState = {
   location: "",
 };
 
+const toDateInputValue = (value: string | null | undefined) => {
+  if (!value) return "";
+  return value.slice(0, 10);
+};
+
 export default function JobApplicationDialog({
   open,
   isSubmitting = false,
+  mode = "create",
+  initialValues,
   onClose,
   onSubmit,
 }: JobApplicationDialogProps) {
   const [form, setForm] = useState<JobApplicationFormState>(initialFormState);
 
   useEffect(() => {
-    if (!open) {
-      setForm(initialFormState);
+    if (!open) return;
+
+    if (mode === "edit" && initialValues) {
+      setForm({
+        company: initialValues.company ?? "",
+        role: initialValues.role ?? "",
+        status: initialValues.status,
+        dateApplied: toDateInputValue(initialValues.dateApplied),
+        isRemote: initialValues.isRemote,
+        location: initialValues.location ?? "",
+      });
+      return;
     }
-  }, [open]);
+
+    setForm(initialFormState);
+  }, [open, mode, initialValues]);
 
   const isValid = useMemo(
     () => form.company.trim().length > 0 && form.role.trim().length > 0,
@@ -75,6 +99,9 @@ export default function JobApplicationDialog({
     });
   };
 
+  const dialogTitle = mode === "edit" ? "Edit Application" : "New Application";
+  const submitLabel = mode === "edit" ? "Save" : "Create";
+
   return (
     <Dialog
       open={open}
@@ -83,7 +110,7 @@ export default function JobApplicationDialog({
       maxWidth="sm"
     >
       <form onSubmit={submit}>
-        <DialogTitle>New Application</DialogTitle>
+        <DialogTitle>{dialogTitle}</DialogTitle>
         <DialogContent>
           <Stack spacing={2} sx={{ mt: 1 }}>
             <TextField
@@ -164,7 +191,7 @@ export default function JobApplicationDialog({
             variant="contained"
             disabled={!isValid || isSubmitting}
           >
-            {isSubmitting ? "Saving..." : "Create"}
+            {isSubmitting ? "Saving..." : submitLabel}
           </Button>
         </DialogActions>
       </form>

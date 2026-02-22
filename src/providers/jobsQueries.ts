@@ -13,6 +13,11 @@ import type {
   UpdateJobApplicationRequestDto,
 } from "../types/jobApplication";
 
+type UpdateJobApplicationMutationInput = {
+  id: string;
+  dto: UpdateJobApplicationRequestDto;
+};
+
 export const useJobApplications = () => {
   const {
     isLoading: isLoadingJobs,
@@ -46,17 +51,16 @@ export const useCreateJobApplication = (
 };
 
 export const useUpdateJobApplication = (
-  id: string,
   successCallback?: (updated: JobApplicationResponseDto) => void,
 ) => {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: (dto: UpdateJobApplicationRequestDto) =>
+    mutationFn: ({ id, dto }: UpdateJobApplicationMutationInput) =>
       updateJobApplication(id, dto),
-    onSuccess: async (updated) => {
+    onSuccess: async (updated, variables) => {
       await qc.invalidateQueries({ queryKey: jobsQueryKeys.all });
-      await qc.invalidateQueries({ queryKey: jobsQueryKeys.byId(id) });
+      await qc.invalidateQueries({ queryKey: jobsQueryKeys.byId(variables.id) });
       successCallback?.(updated);
     },
   });

@@ -22,21 +22,61 @@ import InboxIcon from "@mui/icons-material/Inbox";
 import MailIcon from "@mui/icons-material/Mail";
 import JobApplicationsTable from "./components/JobApplicationsTable";
 import JobApplicationDialog from "./components/JobApplicationDialog";
-import { useCreateJobApplication } from "./providers/jobsQueries";
-import type { CreateJobApplicationRequestDto } from "./types/jobApplication";
+import {
+  useCreateJobApplication,
+  useUpdateJobApplication,
+} from "./providers/jobsQueries";
+import type {
+  CreateJobApplicationRequestDto,
+  JobApplicationResponseDto,
+} from "./types/jobApplication";
 
 const drawerWidth = 240;
 
 export default function App() {
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-  const createMutation = useCreateJobApplication(() =>
-    setIsCreateDialogOpen(false),
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingJob, setEditingJob] = useState<JobApplicationResponseDto | null>(
+    null,
   );
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
 
-  const handleCreate = (dto: CreateJobApplicationRequestDto) => {
+  const createMutation = useCreateJobApplication(() => {
+    setIsDialogOpen(false);
+    setEditingJob(null);
+  });
+
+  const updateMutation = useUpdateJobApplication(() => {
+    setIsDialogOpen(false);
+    setEditingJob(null);
+  });
+
+  const openCreateDialog = () => {
+    setEditingJob(null);
+    setIsDialogOpen(true);
+  };
+
+  const openEditDialog = (job: JobApplicationResponseDto) => {
+    setEditingJob(job);
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    if (createMutation.isPending || updateMutation.isPending) return;
+    setIsDialogOpen(false);
+    setEditingJob(null);
+  };
+
+  const handleSubmit = (dto: CreateJobApplicationRequestDto) => {
+    if (editingJob) {
+      updateMutation.mutate({ id: editingJob.id, dto });
+      return;
+    }
+
     createMutation.mutate(dto);
   };
+
+  const requestError =
+    (editingJob ? updateMutation.error : createMutation.error) ?? null;
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -59,7 +99,7 @@ export default function App() {
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
             ApplyVault
           </Typography>
-          <Button color="inherit" onClick={() => setIsCreateDialogOpen(true)}>
+          <Button color="inherit" onClick={openCreateDialog}>
             New
           </Button>
         </Toolbar>
@@ -97,25 +137,27 @@ export default function App() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
         <Container maxWidth={false} sx={{ px: 0 }}>
-          {createMutation.error ? (
+          {requestError ? (
             <Alert severity="error" sx={{ mb: 2 }}>
-              {(createMutation.error as Error).message ||
-                "Failed to create application."}
+              {(requestError as Error).message || "Failed to save application."}
             </Alert>
           ) : null}
           <Paper elevation={1} sx={{ p: 2 }}>
             <JobApplicationsTable
-              onNewClick={() => setIsCreateDialogOpen(true)}
+              onNewClick={openCreateDialog}
+              onEditClick={openEditDialog}
             />
           </Paper>
         </Container>
       </Box>
 
       <JobApplicationDialog
-        open={isCreateDialogOpen}
-        onClose={() => setIsCreateDialogOpen(false)}
-        onSubmit={handleCreate}
-        isSubmitting={createMutation.isPending}
+        open={isDialogOpen}
+        onClose={closeDialog}
+        onSubmit={handleSubmit}
+        isSubmitting={createMutation.isPending || updateMutation.isPending}
+        mode={editingJob ? "edit" : "create"}
+        initialValues={editingJob}
       />
     </Box>
   );

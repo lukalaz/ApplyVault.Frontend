@@ -1,6 +1,15 @@
 import { useMemo } from "react";
 import { MaterialReactTable, type MRT_ColumnDef } from "material-react-table";
-import { Alert, Box, Button, CircularProgress, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import { useJobApplications } from "../providers/jobsQueries";
 import type {
   ApplicationStatus,
@@ -10,9 +19,13 @@ import { getApplicationStatusLabel } from "../types/jobApplication";
 
 type JobApplicationsTableProps = {
   onNewClick?: () => void;
+  onEditClick?: (job: JobApplicationResponseDto) => void;
 };
 
-export default function JobApplicationsTable({ onNewClick }: JobApplicationsTableProps) {
+export default function JobApplicationsTable({
+  onNewClick,
+  onEditClick,
+}: JobApplicationsTableProps) {
   const { jobs, isLoadingJobs, errorJobs } = useJobApplications();
 
   const columns = useMemo<MRT_ColumnDef<JobApplicationResponseDto>[]>(
@@ -66,6 +79,14 @@ export default function JobApplicationsTable({ onNewClick }: JobApplicationsTabl
             New
           </Button>
         </Box>
+      )}
+      enableRowActions
+      renderRowActions={({ row }) => (
+        <Tooltip title="Edit">
+          <IconButton size="small" onClick={() => onEditClick?.(row.original)}>
+            <EditIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
       )}
       enableColumnFilters
       enableSorting
