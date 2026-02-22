@@ -107,11 +107,10 @@ export default function JobApplicationsTable({
           </Tooltip>
         </Box>
       )}
-      enableColumnFilters
-      enableSorting
-      enablePagination
+      enableSorting={false}
       enableDensityToggle={false}
       enableFullScreenToggle={false}
+      enableColumnActions={false}
       enableHiding={false}
       initialState={{
         density: "compact",
