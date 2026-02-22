@@ -25,6 +25,9 @@ type JobApplicationsTableProps = {
   onDeleteClick?: (job: JobApplicationResponseDto) => void;
 };
 
+const tableFontFamily =
+  '"Poppins", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+
 const getStatusTranslationKey = (status: ApplicationStatus) => {
   switch (status) {
     case ApplicationStatus.Planned:
@@ -215,7 +218,10 @@ export default function JobApplicationsTable({
         density: "compact",
         pagination: { pageIndex: 0, pageSize: 20 },
       }}
-      muiTablePaperProps={{ sx: { width: "100%" } }}
+      muiTablePaperProps={{ sx: { width: "100%", fontFamily: tableFontFamily } }}
+      muiTopToolbarProps={{ sx: { fontFamily: tableFontFamily } }}
+      muiTableHeadCellProps={{ sx: { fontFamily: tableFontFamily } }}
+      muiTableBodyCellProps={{ sx: { fontFamily: tableFontFamily } }}
       muiTableContainerProps={{
         sx: {
           maxHeight: "70vh",

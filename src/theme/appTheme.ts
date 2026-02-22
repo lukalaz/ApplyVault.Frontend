@@ -15,8 +15,9 @@ export const appTheme = createTheme({
     },
   },
   typography: {
+    // App-wide UI font (outside table-heavy data areas).
     fontFamily:
-      '"Poppins", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      '"Space Grotesk", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   },
   shape: {
     borderRadius: 10,
