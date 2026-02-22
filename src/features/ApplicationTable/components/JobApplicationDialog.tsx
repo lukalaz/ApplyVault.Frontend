@@ -15,11 +15,11 @@ import {
 import type {
   CreateJobApplicationRequestDto,
   JobApplicationResponseDto,
-} from "../types/jobApplication";
+} from "../../../types/jobApplication";
 import {
   ApplicationStatus,
   APPLICATION_STATUS_OPTIONS,
-} from "../types/jobApplication";
+} from "../../../types/jobApplication";
 
 type JobApplicationDialogProps = {
   open: boolean;

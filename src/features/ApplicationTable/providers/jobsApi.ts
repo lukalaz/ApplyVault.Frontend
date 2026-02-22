@@ -1,9 +1,9 @@
-import { api } from "../api/client";
+import { api } from "../../../api/client";
 import type {
   JobApplicationResponseDto,
   CreateJobApplicationRequestDto,
   UpdateJobApplicationRequestDto,
-} from "../types/jobApplication";
+} from "../../../types/jobApplication";
 
 export const getJobApplications = () =>
   api.get<JobApplicationResponseDto[]>("/api/job-applications");

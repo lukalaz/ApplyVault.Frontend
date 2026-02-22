@@ -6,7 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import type { JobApplicationResponseDto } from "../types/jobApplication";
+import type { JobApplicationResponseDto } from "../../../types/jobApplication";
 
 type ConfirmDeleteDialogProps = {
   open: boolean;

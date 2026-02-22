@@ -16,8 +16,8 @@ import { useJobApplications } from "../providers/jobsQueries";
 import type {
   ApplicationStatus,
   JobApplicationResponseDto,
-} from "../types/jobApplication";
-import { getApplicationStatusLabel } from "../types/jobApplication";
+} from "../../../types/jobApplication";
+import { getApplicationStatusLabel } from "../../../types/jobApplication";
 
 type JobApplicationsTableProps = {
   onNewClick?: () => void;

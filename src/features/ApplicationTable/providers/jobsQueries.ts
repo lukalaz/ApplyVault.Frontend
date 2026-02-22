@@ -11,7 +11,7 @@ import type {
   JobApplicationResponseDto,
   CreateJobApplicationRequestDto,
   UpdateJobApplicationRequestDto,
-} from "../types/jobApplication";
+} from "../../../types/jobApplication";
 
 type UpdateJobApplicationMutationInput = {
   id: string;
