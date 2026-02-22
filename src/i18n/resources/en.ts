@@ -6,6 +6,11 @@ const en = {
       savedSearches: "Saved Searches",
       settings: "Settings",
     },
+    language: {
+      label: "Language",
+      english: "English",
+      german: "German",
+    },
   },
   common: {
     loading: "Loading...",
