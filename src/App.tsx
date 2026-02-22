@@ -22,8 +22,10 @@ import InboxIcon from "@mui/icons-material/Inbox";
 import MailIcon from "@mui/icons-material/Mail";
 import JobApplicationsTable from "./components/JobApplicationsTable";
 import JobApplicationDialog from "./components/JobApplicationDialog";
+import ConfirmDeleteDialog from "./components/ConfirmDeleteDialog";
 import {
   useCreateJobApplication,
+  useDeleteJobApplication,
   useUpdateJobApplication,
 } from "./providers/jobsQueries";
 import type {
@@ -38,6 +40,9 @@ export default function App() {
   const [editingJob, setEditingJob] = useState<JobApplicationResponseDto | null>(
     null,
   );
+  const [deletingJob, setDeletingJob] = useState<JobApplicationResponseDto | null>(
+    null,
+  );
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
 
   const createMutation = useCreateJobApplication(() => {
@@ -50,6 +55,10 @@ export default function App() {
     setEditingJob(null);
   });
 
+  const deleteMutation = useDeleteJobApplication(() => {
+    setDeletingJob(null);
+  });
+
   const openCreateDialog = () => {
     setEditingJob(null);
     setIsDialogOpen(true);
@@ -60,10 +69,19 @@ export default function App() {
     setIsDialogOpen(true);
   };
 
+  const openDeleteDialog = (job: JobApplicationResponseDto) => {
+    setDeletingJob(job);
+  };
+
   const closeDialog = () => {
     if (createMutation.isPending || updateMutation.isPending) return;
     setIsDialogOpen(false);
     setEditingJob(null);
+  };
+
+  const closeDeleteDialog = () => {
+    if (deleteMutation.isPending) return;
+    setDeletingJob(null);
   };
 
   const handleSubmit = (dto: CreateJobApplicationRequestDto) => {
@@ -75,8 +93,13 @@ export default function App() {
     createMutation.mutate(dto);
   };
 
-  const requestError =
-    (editingJob ? updateMutation.error : createMutation.error) ?? null;
+  const handleDeleteConfirm = () => {
+    if (!deletingJob) return;
+    deleteMutation.mutate(deletingJob.id);
+  };
+
+  const saveError = (editingJob ? updateMutation.error : createMutation.error) ?? null;
+  const deleteError = deleteMutation.error ?? null;
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -137,15 +160,21 @@ export default function App() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
         <Container maxWidth={false} sx={{ px: 0 }}>
-          {requestError ? (
+          {saveError ? (
             <Alert severity="error" sx={{ mb: 2 }}>
-              {(requestError as Error).message || "Failed to save application."}
+              {(saveError as Error).message || "Failed to save application."}
+            </Alert>
+          ) : null}
+          {deleteError ? (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {(deleteError as Error).message || "Failed to delete application."}
             </Alert>
           ) : null}
           <Paper elevation={1} sx={{ p: 2 }}>
             <JobApplicationsTable
               onNewClick={openCreateDialog}
               onEditClick={openEditDialog}
+              onDeleteClick={openDeleteDialog}
             />
           </Paper>
         </Container>
@@ -158,6 +187,14 @@ export default function App() {
         isSubmitting={createMutation.isPending || updateMutation.isPending}
         mode={editingJob ? "edit" : "create"}
         initialValues={editingJob}
+      />
+
+      <ConfirmDeleteDialog
+        open={Boolean(deletingJob)}
+        job={deletingJob}
+        isDeleting={deleteMutation.isPending}
+        onCancel={closeDeleteDialog}
+        onConfirm={handleDeleteConfirm}
       />
     </Box>
   );

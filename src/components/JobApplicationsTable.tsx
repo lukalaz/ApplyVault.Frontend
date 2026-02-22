@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useJobApplications } from "../providers/jobsQueries";
 import type {
   ApplicationStatus,
@@ -20,11 +21,13 @@ import { getApplicationStatusLabel } from "../types/jobApplication";
 type JobApplicationsTableProps = {
   onNewClick?: () => void;
   onEditClick?: (job: JobApplicationResponseDto) => void;
+  onDeleteClick?: (job: JobApplicationResponseDto) => void;
 };
 
 export default function JobApplicationsTable({
   onNewClick,
   onEditClick,
+  onDeleteClick,
 }: JobApplicationsTableProps) {
   const { jobs, isLoadingJobs, errorJobs } = useJobApplications();
 
@@ -82,11 +85,27 @@ export default function JobApplicationsTable({
       )}
       enableRowActions
       renderRowActions={({ row }) => (
-        <Tooltip title="Edit">
-          <IconButton size="small" onClick={() => onEditClick?.(row.original)}>
-            <EditIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <Tooltip title="Edit">
+            <IconButton
+              size="small"
+              aria-label="Edit application"
+              onClick={() => onEditClick?.(row.original)}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton
+              size="small"
+              color="error"
+              aria-label="Delete application"
+              onClick={() => onDeleteClick?.(row.original)}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       )}
       enableColumnFilters
       enableSorting
