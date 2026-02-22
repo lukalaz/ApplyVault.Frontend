@@ -10,6 +10,7 @@ import {
   MenuItem,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 import type {
   CreateJobApplicationRequestDto,
@@ -140,11 +141,23 @@ export default function JobApplicationDialog({
       onClose={isSubmitting ? undefined : onClose}
       fullWidth
       maxWidth="sm"
+      aria-labelledby="job-application-dialog-title"
+      aria-describedby="job-application-dialog-description"
     >
-      <form onSubmit={submit}>
-        <DialogTitle>{dialogTitle}</DialogTitle>
+      <form onSubmit={submit} aria-busy={isSubmitting}>
+        <DialogTitle id="job-application-dialog-title">
+          {dialogTitle}
+        </DialogTitle>
         <DialogContent>
-          <Stack spacing={2} sx={{ mt: 1 }}>
+          <Typography
+            id="job-application-dialog-description"
+            variant="body2"
+            color="text.secondary"
+            sx={{ mb: 2 }}
+          >
+            Fill in the application details and save your changes.
+          </Typography>
+          <Stack spacing={2}>
             <TextField
               label="Company"
               value={form.company}
@@ -153,6 +166,7 @@ export default function JobApplicationDialog({
               }
               required
               autoFocus
+              slotProps={{ htmlInput: { "aria-label": "Company" } }}
             />
             <TextField
               label="Role"
@@ -161,6 +175,7 @@ export default function JobApplicationDialog({
                 setForm((prev) => ({ ...prev, role: event.target.value }))
               }
               required
+              slotProps={{ htmlInput: { "aria-label": "Role" } }}
             />
             <TextField
               select
@@ -172,6 +187,7 @@ export default function JobApplicationDialog({
                   status: Number(event.target.value) as ApplicationStatus,
                 }))
               }
+              slotProps={{ htmlInput: { "aria-label": "Status" } }}
             >
               {APPLICATION_STATUS_OPTIONS.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -189,7 +205,10 @@ export default function JobApplicationDialog({
                   dateApplied: event.target.value,
                 }))
               }
-              slotProps={{ inputLabel: { shrink: true } }}
+              slotProps={{
+                inputLabel: { shrink: true },
+                htmlInput: { "aria-label": "Date Applied" },
+              }}
             />
             <TextField
               label="Location"
@@ -197,6 +216,7 @@ export default function JobApplicationDialog({
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, location: event.target.value }))
               }
+              slotProps={{ htmlInput: { "aria-label": "Location" } }}
             />
             <FormControlLabel
               control={
@@ -208,6 +228,7 @@ export default function JobApplicationDialog({
                       isRemote: event.target.checked,
                     }))
                   }
+                  slotProps={{ input: { "aria-label": "Remote" } }}
                 />
               }
               label="Remote"
@@ -218,20 +239,29 @@ export default function JobApplicationDialog({
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, referral: event.target.value }))
               }
+              slotProps={{ htmlInput: { "aria-label": "Referral" } }}
             />
             <TextField
               label="Contact Person"
               value={form.contactPerson}
               onChange={(event) =>
-                setForm((prev) => ({ ...prev, contactPerson: event.target.value }))
+                setForm((prev) => ({
+                  ...prev,
+                  contactPerson: event.target.value,
+                }))
               }
+              slotProps={{ htmlInput: { "aria-label": "Contact Person" } }}
             />
             <TextField
               label="Compensation Range"
               value={form.compensationRange}
               onChange={(event) =>
-                setForm((prev) => ({ ...prev, compensationRange: event.target.value }))
+                setForm((prev) => ({
+                  ...prev,
+                  compensationRange: event.target.value,
+                }))
               }
+              slotProps={{ htmlInput: { "aria-label": "Compensation Range" } }}
             />
             <TextField
               label="Last Touch"
@@ -240,7 +270,10 @@ export default function JobApplicationDialog({
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, lastTouch: event.target.value }))
               }
-              slotProps={{ inputLabel: { shrink: true } }}
+              slotProps={{
+                inputLabel: { shrink: true },
+                htmlInput: { "aria-label": "Last Touch" },
+              }}
             />
             <TextField
               label="Next Action"
@@ -248,15 +281,22 @@ export default function JobApplicationDialog({
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, nextAction: event.target.value }))
               }
+              slotProps={{ htmlInput: { "aria-label": "Next Action" } }}
             />
             <TextField
               label="Next Action Date"
               type="date"
               value={form.nextActionDate}
               onChange={(event) =>
-                setForm((prev) => ({ ...prev, nextActionDate: event.target.value }))
+                setForm((prev) => ({
+                  ...prev,
+                  nextActionDate: event.target.value,
+                }))
               }
-              slotProps={{ inputLabel: { shrink: true } }}
+              slotProps={{
+                inputLabel: { shrink: true },
+                htmlInput: { "aria-label": "Next Action Date" },
+              }}
             />
             <TextField
               label="Link"
@@ -264,6 +304,7 @@ export default function JobApplicationDialog({
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, link: event.target.value }))
               }
+              slotProps={{ htmlInput: { "aria-label": "Link" } }}
             />
             <TextField
               label="Notes"
@@ -273,6 +314,7 @@ export default function JobApplicationDialog({
               }
               multiline
               minRows={3}
+              slotProps={{ htmlInput: { "aria-label": "Notes" } }}
             />
           </Stack>
         </DialogContent>
