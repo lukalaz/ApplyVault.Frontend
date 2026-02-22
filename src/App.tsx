@@ -52,7 +52,7 @@ export default function App() {
             edge="start"
             sx={{ mr: 2 }}
             aria-label="menu"
-            onClick={() => setIsOpenDrawer(!isOpenDrawer)}
+            onClick={() => setIsOpenDrawer((v) => !v)}
           >
             <MenuIcon />
           </IconButton>
@@ -67,6 +67,7 @@ export default function App() {
 
       <Drawer
         open={isOpenDrawer}
+        onClose={() => setIsOpenDrawer(false)}
         variant="temporary"
         sx={{
           width: drawerWidth,
