@@ -29,7 +29,10 @@ const drawerWidth = 240;
 
 export default function App() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const createMutation = useCreateJobApplication(() => setIsCreateDialogOpen(false));
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const createMutation = useCreateJobApplication(() =>
+    setIsCreateDialogOpen(false),
+  );
 
   const handleCreate = (dto: CreateJobApplicationRequestDto) => {
     createMutation.mutate(dto);
@@ -39,9 +42,18 @@ export default function App() {
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <CssBaseline />
 
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar
+        position="fixed"
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
         <Toolbar>
-          <IconButton color="inherit" edge="start" sx={{ mr: 2 }} aria-label="menu">
+          <IconButton
+            color="inherit"
+            edge="start"
+            sx={{ mr: 2 }}
+            aria-label="menu"
+            onClick={() => setIsOpenDrawer(!isOpenDrawer)}
+          >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
@@ -54,11 +66,15 @@ export default function App() {
       </AppBar>
 
       <Drawer
-        variant="permanent"
+        open={isOpenDrawer}
+        variant="temporary"
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
         }}
       >
         <Toolbar />
@@ -82,11 +98,14 @@ export default function App() {
         <Container maxWidth={false} sx={{ px: 0 }}>
           {createMutation.error ? (
             <Alert severity="error" sx={{ mb: 2 }}>
-              {(createMutation.error as Error).message || "Failed to create application."}
+              {(createMutation.error as Error).message ||
+                "Failed to create application."}
             </Alert>
           ) : null}
           <Paper elevation={1} sx={{ p: 2 }}>
-            <JobApplicationsTable onNewClick={() => setIsCreateDialogOpen(true)} />
+            <JobApplicationsTable
+              onNewClick={() => setIsCreateDialogOpen(true)}
+            />
           </Paper>
         </Container>
       </Box>
