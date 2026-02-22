@@ -1,6 +1,12 @@
 import { useMemo } from "react";
 import { MaterialReactTable, type MRT_ColumnDef } from "material-react-table";
-import { Alert, Box, CircularProgress } from "@mui/material";
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  Button,
+  Typography,
+} from "@mui/material";
 import { useJobApplications } from "../providers/jobsQueries";
 import type { JobApplicationResponseDto } from "../types/jobApplication";
 
@@ -46,6 +52,14 @@ export default function JobApplicationsTable() {
     <MaterialReactTable
       columns={columns}
       data={jobs}
+      renderTopToolbarCustomActions={() => (
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+          <Typography variant="subtitle1">Applications</Typography>
+          <Button variant="contained" size="small">
+            New
+          </Button>
+        </Box>
+      )}
       enableColumnFilters
       enableSorting
       enablePagination
