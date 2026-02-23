@@ -175,12 +175,7 @@ export default function JobApplicationsTable({
           <Box>
             <Typography variant="subtitle1">{t("table.title")}</Typography>
           </Box>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={onNewClick}
-            sx={{ ml: "auto", paddingX: 0 }}
-          >
+          <Button variant="contained" onClick={onNewClick} sx={{ ml: "auto" }}>
             {t("table.new")}
           </Button>
         </>
