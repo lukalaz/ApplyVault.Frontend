@@ -17,7 +17,7 @@ import { useJobApplications } from "../providers/jobsQueries";
 import {
   ApplicationStatus,
   type JobApplicationResponseDto,
-} from "../../../types/jobApplication";
+} from "../types/jobApplication";
 
 type JobApplicationsTableProps = {
   onNewClick?: () => void;
@@ -218,7 +218,9 @@ export default function JobApplicationsTable({
         density: "compact",
         pagination: { pageIndex: 0, pageSize: 20 },
       }}
-      muiTablePaperProps={{ sx: { width: "100%", fontFamily: tableFontFamily } }}
+      muiTablePaperProps={{
+        sx: { width: "100%", fontFamily: tableFontFamily },
+      }}
       muiTopToolbarProps={{ sx: { fontFamily: tableFontFamily } }}
       muiTableHeadCellProps={{ sx: { fontFamily: tableFontFamily } }}
       muiTableBodyCellProps={{ sx: { fontFamily: tableFontFamily } }}

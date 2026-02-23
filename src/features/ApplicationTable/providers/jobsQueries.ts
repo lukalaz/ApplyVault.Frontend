@@ -11,7 +11,7 @@ import type {
   JobApplicationResponseDto,
   CreateJobApplicationRequestDto,
   UpdateJobApplicationRequestDto,
-} from "../../../types/jobApplication";
+} from "../types/jobApplication";
 
 type UpdateJobApplicationMutationInput = {
   id: string;
@@ -60,7 +60,9 @@ export const useUpdateJobApplication = (
       updateJobApplication(id, dto),
     onSuccess: async (updated, variables) => {
       await qc.invalidateQueries({ queryKey: jobsQueryKeys.all });
-      await qc.invalidateQueries({ queryKey: jobsQueryKeys.byId(variables.id) });
+      await qc.invalidateQueries({
+        queryKey: jobsQueryKeys.byId(variables.id),
+      });
       successCallback?.(updated);
     },
   });

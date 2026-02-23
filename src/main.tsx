@@ -4,9 +4,9 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { I18nextProvider } from "react-i18next";
 import App from "./App";
-import i18n from "./i18n/i18n";
+import i18n from "./common/i18n/i18n";
 import "./index.css";
-import { appTheme } from "./theme/appTheme";
+import { appTheme } from "./common/theme/appTheme";
 
 const queryClient = new QueryClient();
 

@@ -9,19 +9,17 @@ import {
 import type {
   CreateJobApplicationRequestDto,
   JobApplicationResponseDto,
-} from "../../types/jobApplication";
+} from "./types/jobApplication";
 import ConfirmDeleteDialog from "./components/ConfirmDeleteDialog";
 import JobApplicationDialog from "./components/JobApplicationDialog";
 import JobApplicationsTable from "./components/JobApplicationsTable";
 
 export default function ApplicationTableFeature() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingJob, setEditingJob] = useState<JobApplicationResponseDto | null>(
-    null,
-  );
-  const [deletingJob, setDeletingJob] = useState<JobApplicationResponseDto | null>(
-    null,
-  );
+  const [editingJob, setEditingJob] =
+    useState<JobApplicationResponseDto | null>(null);
+  const [deletingJob, setDeletingJob] =
+    useState<JobApplicationResponseDto | null>(null);
   const { t } = useTranslation();
 
   const createMutation = useCreateJobApplication(() => {

@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import type { JobApplicationResponseDto } from "../../../types/jobApplication";
+import type { JobApplicationResponseDto } from "../types/jobApplication";
 
 type ConfirmDeleteDialogProps = {
   open: boolean;
@@ -36,7 +36,9 @@ export default function ConfirmDeleteDialog({
       fullWidth
       maxWidth="xs"
     >
-      <DialogTitle id="confirm-delete-title">{t("dialogs.confirmDelete.title")}</DialogTitle>
+      <DialogTitle id="confirm-delete-title">
+        {t("dialogs.confirmDelete.title")}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText id="confirm-delete-description">
           {t("dialogs.confirmDelete.description", { label })}

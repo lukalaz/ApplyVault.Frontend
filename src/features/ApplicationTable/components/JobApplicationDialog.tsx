@@ -16,8 +16,8 @@ import { useTranslation } from "react-i18next";
 import type {
   CreateJobApplicationRequestDto,
   JobApplicationResponseDto,
-} from "../../../types/jobApplication";
-import { ApplicationStatus } from "../../../types/jobApplication";
+} from "../types/jobApplication";
+import { ApplicationStatus } from "../types/jobApplication";
 
 type JobApplicationDialogProps = {
   open: boolean;
@@ -160,7 +160,9 @@ export default function JobApplicationDialog({
   };
 
   const dialogTitle =
-    mode === "edit" ? t("dialogs.application.titleEdit") : t("dialogs.application.titleCreate");
+    mode === "edit"
+      ? t("dialogs.application.titleEdit")
+      : t("dialogs.application.titleCreate");
   const submitLabel = mode === "edit" ? t("common.save") : t("common.create");
 
   return (
@@ -194,7 +196,11 @@ export default function JobApplicationDialog({
               }
               required
               autoFocus
-              slotProps={{ htmlInput: { "aria-label": t("dialogs.application.labels.company") } }}
+              slotProps={{
+                htmlInput: {
+                  "aria-label": t("dialogs.application.labels.company"),
+                },
+              }}
             />
             <TextField
               label={t("dialogs.application.labels.role")}
@@ -203,7 +209,11 @@ export default function JobApplicationDialog({
                 setForm((prev) => ({ ...prev, role: event.target.value }))
               }
               required
-              slotProps={{ htmlInput: { "aria-label": t("dialogs.application.labels.role") } }}
+              slotProps={{
+                htmlInput: {
+                  "aria-label": t("dialogs.application.labels.role"),
+                },
+              }}
             />
             <TextField
               select
@@ -215,7 +225,11 @@ export default function JobApplicationDialog({
                   status: Number(event.target.value) as ApplicationStatus,
                 }))
               }
-              slotProps={{ htmlInput: { "aria-label": t("dialogs.application.labels.status") } }}
+              slotProps={{
+                htmlInput: {
+                  "aria-label": t("dialogs.application.labels.status"),
+                },
+              }}
             >
               {statusValues.map((value) => (
                 <MenuItem key={value} value={value}>
@@ -235,7 +249,9 @@ export default function JobApplicationDialog({
               }
               slotProps={{
                 inputLabel: { shrink: true },
-                htmlInput: { "aria-label": t("dialogs.application.labels.dateApplied") },
+                htmlInput: {
+                  "aria-label": t("dialogs.application.labels.dateApplied"),
+                },
               }}
             />
             <TextField
@@ -244,7 +260,11 @@ export default function JobApplicationDialog({
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, location: event.target.value }))
               }
-              slotProps={{ htmlInput: { "aria-label": t("dialogs.application.labels.location") } }}
+              slotProps={{
+                htmlInput: {
+                  "aria-label": t("dialogs.application.labels.location"),
+                },
+              }}
             />
             <FormControlLabel
               control={
@@ -256,7 +276,11 @@ export default function JobApplicationDialog({
                       isRemote: event.target.checked,
                     }))
                   }
-                  slotProps={{ input: { "aria-label": t("dialogs.application.labels.remote") } }}
+                  slotProps={{
+                    input: {
+                      "aria-label": t("dialogs.application.labels.remote"),
+                    },
+                  }}
                 />
               }
               label={t("dialogs.application.labels.remote")}
@@ -267,7 +291,11 @@ export default function JobApplicationDialog({
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, referral: event.target.value }))
               }
-              slotProps={{ htmlInput: { "aria-label": t("dialogs.application.labels.referral") } }}
+              slotProps={{
+                htmlInput: {
+                  "aria-label": t("dialogs.application.labels.referral"),
+                },
+              }}
             />
             <TextField
               label={t("dialogs.application.labels.contactPerson")}
@@ -278,7 +306,11 @@ export default function JobApplicationDialog({
                   contactPerson: event.target.value,
                 }))
               }
-              slotProps={{ htmlInput: { "aria-label": t("dialogs.application.labels.contactPerson") } }}
+              slotProps={{
+                htmlInput: {
+                  "aria-label": t("dialogs.application.labels.contactPerson"),
+                },
+              }}
             />
             <TextField
               label={t("dialogs.application.labels.compensationRange")}
@@ -290,7 +322,11 @@ export default function JobApplicationDialog({
                 }))
               }
               slotProps={{
-                htmlInput: { "aria-label": t("dialogs.application.labels.compensationRange") },
+                htmlInput: {
+                  "aria-label": t(
+                    "dialogs.application.labels.compensationRange",
+                  ),
+                },
               }}
             />
             <TextField
@@ -302,7 +338,9 @@ export default function JobApplicationDialog({
               }
               slotProps={{
                 inputLabel: { shrink: true },
-                htmlInput: { "aria-label": t("dialogs.application.labels.lastTouch") },
+                htmlInput: {
+                  "aria-label": t("dialogs.application.labels.lastTouch"),
+                },
               }}
             />
             <TextField
@@ -311,7 +349,11 @@ export default function JobApplicationDialog({
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, nextAction: event.target.value }))
               }
-              slotProps={{ htmlInput: { "aria-label": t("dialogs.application.labels.nextAction") } }}
+              slotProps={{
+                htmlInput: {
+                  "aria-label": t("dialogs.application.labels.nextAction"),
+                },
+              }}
             />
             <TextField
               label={t("dialogs.application.labels.nextActionDate")}
@@ -325,7 +367,9 @@ export default function JobApplicationDialog({
               }
               slotProps={{
                 inputLabel: { shrink: true },
-                htmlInput: { "aria-label": t("dialogs.application.labels.nextActionDate") },
+                htmlInput: {
+                  "aria-label": t("dialogs.application.labels.nextActionDate"),
+                },
               }}
             />
             <TextField
@@ -334,7 +378,11 @@ export default function JobApplicationDialog({
               onChange={(event) =>
                 setForm((prev) => ({ ...prev, link: event.target.value }))
               }
-              slotProps={{ htmlInput: { "aria-label": t("dialogs.application.labels.link") } }}
+              slotProps={{
+                htmlInput: {
+                  "aria-label": t("dialogs.application.labels.link"),
+                },
+              }}
             />
             <TextField
               label={t("dialogs.application.labels.notes")}
@@ -344,7 +392,11 @@ export default function JobApplicationDialog({
               }
               multiline
               minRows={3}
-              slotProps={{ htmlInput: { "aria-label": t("dialogs.application.labels.notes") } }}
+              slotProps={{
+                htmlInput: {
+                  "aria-label": t("dialogs.application.labels.notes"),
+                },
+              }}
             />
           </Stack>
         </DialogContent>
