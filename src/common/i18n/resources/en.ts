@@ -31,7 +31,7 @@ const en = {
   },
   table: {
     title: "Applications",
-    new: "New",
+    new: "New Application",
     headers: {
       company: "Company",
       role: "Role",
@@ -89,7 +89,8 @@ const en = {
     },
     confirmDelete: {
       title: "Delete Application",
-      description: "Are you sure you want to delete {{label}}? This action cannot be undone.",
+      description:
+        "Are you sure you want to delete {{label}}? This action cannot be undone.",
     },
   },
 };

@@ -31,7 +31,7 @@ const de = {
   },
   table: {
     title: "Bewerbungen",
-    new: "Neu",
+    new: "Neue Bewerbung",
     headers: {
       company: "Unternehmen",
       role: "Rolle",
