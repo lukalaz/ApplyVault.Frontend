@@ -3,10 +3,10 @@ import ReactDOM from "react-dom/client";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { I18nextProvider } from "react-i18next";
-import App from "./App";
 import i18n from "./common/i18n/i18n";
 import "./index.css";
 import { appTheme } from "./common/theme/appTheme";
+import BackendWarmupGate from "./features/WarmupGate/WarmupGateFeature";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={appTheme}>
           <CssBaseline />
-          <App />
+          <BackendWarmupGate />
         </ThemeProvider>
       </QueryClientProvider>
     </I18nextProvider>
