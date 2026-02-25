@@ -1,4 +1,14 @@
 const en = {
+  warmup: {
+    title: "Waking up ApplyVault…",
+    description:
+      "This demo runs on a cold-start backend. First visit may take a moment. This usually does not take longer than a minute or two.",
+    pinging: "Pinging backend…",
+    waiting: "Waiting to retry…",
+    attempt: "Attempt",
+    reload: "Reload page",
+    errorFallback: "Backend is still starting.",
+  },
   app: {
     title: "ApplyVault",
     nav: {

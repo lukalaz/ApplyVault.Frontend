@@ -1,4 +1,14 @@
 const de = {
+  warmup: {
+    title: "ApplyVault wird gestartet…",
+    description:
+      "Diese Demo nutzt ein Backend mit Kaltstart. Der erste Aufruf kann einen Moment dauern. In der Regel dauert das nicht länger als ein bis zwei Minuten.",
+    pinging: "Backend wird geprüft…",
+    waiting: "Warten auf nächsten Versuch…",
+    attempt: "Versuch",
+    reload: "Seite neu laden",
+    errorFallback: "Das Backend startet noch.",
+  },
   app: {
     title: "ApplyVault",
     nav: {
