@@ -5,7 +5,14 @@ import { getHealth } from "./warmupApi";
 const MAX_RETRY_DELAY_MS = 4000;
 
 export const useHealth = (enabled = true) => {
-  const query = useQuery({
+  const {
+    isLoading: isLoadingHealth,
+    isFetching: isFetchingHealth,
+    isSuccess,
+    error: errorHealth,
+    data,
+    failureCount,
+  } = useQuery({
     queryKey: healthQueryKeys.all,
     queryFn: () => getHealth(),
     enabled,
@@ -18,5 +25,13 @@ export const useHealth = (enabled = true) => {
     staleTime: 60_000,
   });
 
-  return query;
+  const isHealthy = isSuccess && data === true;
+
+  return {
+    isLoadingHealth,
+    isFetchingHealth,
+    errorHealth,
+    failureCount,
+    isHealthy,
+  };
 };

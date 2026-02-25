@@ -6,14 +6,15 @@ import App from "../../App";
 export default function BackendWarmupGate() {
   const { t } = useTranslation();
 
-  const { isSuccess, isFetching, failureCount, error } = useHealth(true);
+  const { isHealthy, failureCount, errorHealth, isFetchingHealth } =
+    useHealth(true);
 
-  if (isSuccess) return <App />;
+  if (isHealthy) return <App />;
 
   const errorText =
-    error instanceof Error
-      ? error.message
-      : error
+    errorHealth instanceof Error
+      ? errorHealth.message
+      : errorHealth
         ? t("warmup.errorFallback")
         : null;
 
@@ -38,7 +39,7 @@ export default function BackendWarmupGate() {
         </Typography>
 
         <Typography variant="body2" sx={{ mt: 2, opacity: 0.7 }}>
-          {isFetching ? t("warmup.pinging") : t("warmup.waiting")}
+          {isFetchingHealth ? t("warmup.pinging") : t("warmup.waiting")}
           {" • "}
           {t("warmup.attempt")}: {failureCount + 1}
           {errorText ? ` • ${errorText}` : ""}
